@@ -456,7 +456,7 @@ message ListRolloutHisReply {
 message UpdateDeploymentReplaceSetReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
   string name = 2 [(validate.rules).string.min_len = 1];
-  int32 replicas = 3 [(validate.rules).int32.lt = 1];
+  int32 replicas = 3 [(validate.rules).int32.gt = 0];
 }
 message UpdateDeploymentReplaceSetReply {
   bool result = 1;
