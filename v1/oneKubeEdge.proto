@@ -319,7 +319,7 @@ message PodDNSConfig {
 // HostAlias - pod 级别
 message HostAlias {
   string ip = 1 [(validate.rules).string.ip = true];
-  repeated string hostnames = 2 [(validate.rules).string.address = true];;
+  repeated string hostnames = 2;
 }
 // Probe
 message Probe {
