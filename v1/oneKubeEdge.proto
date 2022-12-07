@@ -504,8 +504,10 @@ message DelSecretReply {
 message CreateTlsSecretReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
   string name = 2 [(validate.rules).string.min_len = 1];
-  string tlsCrt = 3 [(validate.rules).string.min_len = 1];
-  string tlsKey = 4 [(validate.rules).string.min_len = 1];
+  map<string, string> annotations = 3;
+  map<string, string> labels = 4;
+  string tlsCrt = 5 [(validate.rules).string.min_len = 1];
+  string tlsKey = 6 [(validate.rules).string.min_len = 1];
 }
 message CreateTlsSecretReply {
   bool result = 1;
@@ -513,8 +515,10 @@ message CreateTlsSecretReply {
 message UpdateTlsSecretReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
   string name = 2 [(validate.rules).string.min_len = 1];
-  string tlsCrt = 3 [(validate.rules).string.min_len = 1];
-  string tlsKey = 4 [(validate.rules).string.min_len = 1];
+  map<string, string> annotations = 3;
+  map<string, string> labels = 4;
+  string tlsCrt = 5 [(validate.rules).string.min_len = 1];
+  string tlsKey = 6 [(validate.rules).string.min_len = 1];
 }
 message UpdateTlsSecretReply {
   bool result = 1;
@@ -522,7 +526,9 @@ message UpdateTlsSecretReply {
 message CreateOpaqueSecretReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
   string name = 2 [(validate.rules).string.min_len = 1];
-  map<string, string> data = 3;
+  map<string, string> annotations = 3;
+  map<string, string> labels = 4;
+  map<string, string> data = 5;
 }
 message CreateOpaqueSecretReply {
   bool result = 1;
@@ -530,7 +536,9 @@ message CreateOpaqueSecretReply {
 message UpdateOpaqueSecretReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
   string name = 2 [(validate.rules).string.min_len = 1];
-  map<string, string> data = 3;
+  map<string, string> annotations = 3;
+  map<string, string> labels = 4;
+  map<string, string> data = 5;
 }
 message UpdateOpaqueSecretReply {
   bool result = 1;
@@ -542,6 +550,8 @@ message CreateDockerConfigJsonSecretReq {
   string password = 4 [(validate.rules).string.min_len = 1];
   string email = 5 [(validate.rules).string.email = true];
   string url = 6 [(validate.rules).string.min_len = 1];
+  map<string, string> annotations = 7;
+  map<string, string> labels = 8;
 }
 message CreateDockerConfigJsonSecretReply {
   bool result = 1;
@@ -553,6 +563,8 @@ message UpdateDockerConfigJsonSecretReq {
   string password = 4 [(validate.rules).string.min_len = 1];
   string email = 5 [(validate.rules).string.email = true];
   string url = 6 [(validate.rules).string.min_len = 1];
+  map<string, string> annotations = 7;
+  map<string, string> labels = 8;
 }
 message UpdateDockerConfigJsonSecretReply {
   bool result = 1;
@@ -563,6 +575,8 @@ message CreateBasicAuthSecretReq {
   string username = 3 [(validate.rules).string.min_len = 1];
   string password = 4 [(validate.rules).string.min_len = 1];
   bool immutable = 5;
+  map<string, string> annotations = 6;
+  map<string, string> labels = 7;
 }
 message CreateBasicAuthSecretReply {
   bool result = 1;
@@ -573,6 +587,8 @@ message UpdateBasicAuthSecretReq {
   string username = 3 [(validate.rules).string.min_len = 1];
   string password = 4 [(validate.rules).string.min_len = 1];
   bool immutable = 5;
+  map<string, string> annotations = 6;
+  map<string, string> labels = 7;
 }
 message UpdateBasicAuthSecretReply {
   bool result = 1;
@@ -582,6 +598,8 @@ message CreateSshAuthSecretReq {
   string name = 2 [(validate.rules).string.min_len = 1];
   string privateKey = 3 [(validate.rules).string.min_len = 1];
   bool immutable = 4;
+  map<string, string> annotations = 5;
+  map<string, string> labels = 6;
 }
 message CreateSshAuthSecretReply {
   bool result = 1;
@@ -591,6 +609,8 @@ message UpdateSshAuthSecretReq {
   string name = 2 [(validate.rules).string.min_len = 1];
   string privateKey = 3 [(validate.rules).string.min_len = 1];
   bool immutable = 4;
+  map<string, string> annotations = 5;
+  map<string, string> labels = 6;
 }
 message UpdateSshAuthSecretReply {
   bool result = 1;
