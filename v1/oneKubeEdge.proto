@@ -79,6 +79,7 @@ service oneKubeEdge {
   rpc DelService (DelServiceReq) returns (DelServiceReply) {};
 
   rpc CreateIngress (CreateIngressReq) returns (CreateIngressReply) {};
+  rpc UpdateIngress (UpdateIngressReq) returns (UpdateIngressReply) {};
   rpc ListIngress (ListIngressReq) returns (ListIngressReply) {};
   rpc GetIngress (GetIngressReq) returns (GetIngressReply) {};
   rpc DelIngress (DelIngressReq) returns (DelIngressReply) {};
@@ -895,27 +896,96 @@ message DelServiceReply {
 // Ingress
 message CreateIngressReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
+  string name = 2 [(validate.rules).string.min_len = 1];
+  //string ingressClassName = 3 [(validate.rules).string.min_len = 1];
+  map <string, string> annotations = 4;
+  map <string, string> labels = 5;
+  // map[hostname]Service
+  map <string, Service> service = 6;
+  message Service {
+    string tlsSecret = 1;
+    map <string, Path> path = 5;
+    message Path {
+      string pathType = 1 [(validate.rules).string.min_len = 1];
+      string serviceName = 2 [(validate.rules).string.min_len = 1];
+      int32 servicePort = 3 [(validate.rules).int32.gt = 1];
+    }
+  }
 }
 message CreateIngressReply {
-
+  bool result = 1;
+}
+message UpdateIngressReq {
+  string namespace = 1 [(validate.rules).string.min_len = 1];
+  string name = 2 [(validate.rules).string.min_len = 1];
+  //string ingressClassName = 3 [(validate.rules).string.min_len = 1];
+  map <string, string> annotations = 4;
+  map <string, string> labels = 5;
+  // map[hostname]Service
+  map <string, Service> service = 6;
+  message Service {
+    string tlsSecret = 1;
+    map <string, Path> path = 5;
+    message Path {
+      string pathType = 1 [(validate.rules).string.min_len = 1];
+      string serviceName = 2 [(validate.rules).string.min_len = 1];
+      int32 servicePort = 3 [(validate.rules).int32.gt = 1];
+    }
+  }
+}
+message UpdateIngressReply {
+  bool result = 1;
 }
 message ListIngressReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
 }
 message ListIngressReply {
-
+  repeated Ingress ingress = 1;
+  message Ingress {
+    string namespace = 1 [(validate.rules).string.min_len = 1];
+    string name = 2 [(validate.rules).string.min_len = 1];
+    map <string, string> annotations = 3;
+    map <string, string> labels = 4;
+    // map[hostname]Service
+    map <string, Service> service = 5;
+    message Service {
+      string tlsSecret = 1;
+      map <string, Path> path = 5;
+      message Path {
+        string pathType = 1 [(validate.rules).string.min_len = 1];
+        string serviceName = 2 [(validate.rules).string.min_len = 1];
+        int32 servicePort = 3 [(validate.rules).int32.gt = 1];
+      }
+    }
+  }
 }
 message GetIngressReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
+  string name = 2 [(validate.rules).string.min_len = 1];
 }
 message GetIngressReply {
-
+  string namespace = 1 [(validate.rules).string.min_len = 1];
+  string name = 2 [(validate.rules).string.min_len = 1];
+  map <string, string> annotations = 3;
+  map <string, string> labels = 4;
+  // map[hostname]Service
+  map <string, Service> service = 5;
+  message Service {
+    string tlsSecret = 1;
+    map <string, Path> path = 5;
+    message Path {
+      string pathType = 1 [(validate.rules).string.min_len = 1];
+      string serviceName = 2 [(validate.rules).string.min_len = 1];
+      int32 servicePort = 3 [(validate.rules).int32.gt = 1];
+    }
+  }
 }
 message DelIngressReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
+  string name = 2 [(validate.rules).string.min_len = 1];
 }
 message DelIngressReply {
-
+  bool result = 1;
 }
 // LoadBalancer
 message CreateLoadBalancerReq {
