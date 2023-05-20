@@ -49,6 +49,8 @@ service oneKubeEdge {
   rpc UpdateDeployment (UpdateDeploymentReq) returns (UpdateDeploymentReply) {};
   rpc UpdateDeploymentReplaceSet (UpdateDeploymentReplaceSetReq) returns (UpdateDeploymentReplaceSetReply) {};
   rpc ListRolloutHis (ListRolloutHisReq) returns (ListRolloutHisReply) {};
+
+  rpc FilterDeployment (FilterDeploymentReq) returns (FilterDeploymentReply) {};
   // Event
 
   // Job
@@ -71,7 +73,7 @@ service oneKubeEdge {
   rpc SearchPod (SearchPodReq) returns (SearchPodReply) {};
   rpc DelPod (DelPodReq) returns (DelPodReply) {};
   rpc EvictPod (EvictPodReq) returns (EvictPodReply) {};
-
+  rpc DelEvictPod (DelEvictPodReq) returns (DelEvictPodReply) {};
   // Service
   rpc CreateService (CreateServiceReq) returns (CreateServiceReply) {};
   rpc ListService (ListServiceReq) returns (ListServiceReply) {};
@@ -401,7 +403,6 @@ message DeploymentStatus {
   int32 unavailableReplicas = 5;
 }
 //
-//
 message CreateDeploymentReq {
   Deployment deployment = 1;
 }
@@ -462,6 +463,27 @@ message UpdateDeploymentReplaceSetReq {
 message UpdateDeploymentReplaceSetReply {
   bool result = 1;
 }
+message FilterDeploymentReq {
+  int32 minCpu = 1;
+  int32 maxCpu = 2;
+  int32 minMemory = 3;
+  int32 maxMemory = 4;
+  int32 minReplicas = 5;  // 最少 replicas
+  int32 unAvailableReplicas = 6; // 无效的 Replicas 个数
+  string imageKeyword = 7; // 镜像关键字
+  string nameKeyword = 8; // 名字关键字
+  map<string, string> envs = 9; // 命中环境变量
+  map<string, string> labels = 10; // labels命中
+  string namespace = 11;
+}
+message FilterDeploymentReply {
+  repeated deployment deployments = 1;
+  message deployment {
+    string namespace = 1;
+    string name = 2;
+  }
+}
+
 // Secret
 message ListSecretReq {
   string namespace = 1 [(validate.rules).string.min_len = 1];
@@ -832,6 +854,12 @@ message EvictPodReq {
   string name = 2 [(validate.rules).string.min_len = 1];
 }
 message EvictPodReply {
+  bool result = 1;
+}
+message DelEvictPodReq {
+  string namespace = 1 [(validate.rules).string.min_len = 1];
+}
+message DelEvictPodReply {
   bool result = 1;
 }
 // Service
