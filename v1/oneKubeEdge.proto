@@ -9,6 +9,8 @@ option go_package = "github.com/startopsz/oneKubeEdge/api/oneKubeEdge/v1;v1";
 import "validate/validate.proto";
 
 service oneKubeEdge {
+  rpc GetClusterSummary (GetClusterSummaryReq) returns (GetClusterSummaryReply) {};
+
   // nameSpace
   rpc CreateNameSpace (CreateNameSpaceReq) returns (CreateNameSpaceReply) {};
   rpc ListNameSpace (ListNameSpaceReq) returns (ListNameSpaceReply) {};
@@ -26,6 +28,8 @@ service oneKubeEdge {
   rpc ListSecret (ListSecretReq) returns (ListSecretReply) {};
   rpc GetSecret (GetSecretReq) returns (GetSecretReply) {};
   rpc DelSecret (DelSecretReq) returns (DelSecretReply) {};
+
+  rpc GetExpiringSoonKubernetesTls (GetExpiringSoonKubernetesTlsReq) returns (GetExpiringSoonKubernetesTlsReply) {};
 
   rpc CreateTlsSecret (CreateTlsSecretReq) returns (CreateTlsSecretReply) {};
   rpc CreateOpaqueSecret (CreateOpaqueSecretReq) returns (CreateOpaqueSecretReply) {};
@@ -100,6 +104,30 @@ service oneKubeEdge {
   // Volume
   rpc ListPersistentVolume (ListPersistentVolumeReq) returns (ListPersistentVolumeReply) {};
   rpc ListPersistentVolumeClaim (ListPersistentVolumeClaimReq) returns (ListPersistentVolumeClaimReply) {};
+}
+
+message GetClusterSummaryReq {
+
+}
+
+message GetClusterSummaryReply {
+  int64 capacityCpu = 1;
+  int64 capacityMemory = 2;
+  int64 capacityStorage = 3;
+  int64 allocatableCpu = 4;
+  int64 allocatableMemory = 5;
+  int64 allocatableStorage = 6;
+  float allocatableCpuPercent = 7;
+  float allocatableMemoryPercent = 8;
+  float allocatableStoragePercent = 9;
+
+  int64 assignedCpu = 10;
+  int64 assignedMemory = 11;
+  int64 assignedStorage = 12;
+
+  float assignedCpuPercent = 13;
+  float assignedMemoryPercent = 14;
+  float assignedStoragePercent = 15;
 }
 
 message GetNodeMetricsReq {
@@ -681,17 +709,25 @@ message ListNodeReply {
     map <string, string> annotations = 10;
     Capacity capacity = 11;
     Allocatable allocatable = 12;
+    AllocatablePercent allocatablePercent = 13;
+
     message Capacity {
-      string cpu = 1;
-      string memory = 2;
-      string storage = 3;
-      string storageEphemeral = 4;
+      int64 cpu = 1;
+      int64 memory = 2;
+      int64 storage = 3;
+      int64 storageEphemeral = 4;
     }
     message Allocatable {
-      string cpu = 1;
-      string memory = 2;
-      string storage = 3;
-      string storageEphemeral = 4;
+      int64 cpu = 1;
+      int64 memory = 2;
+      int64 storage = 3;
+      int64 storageEphemeral = 4;
+    }
+    message AllocatablePercent {
+      float cpu = 1;
+      float memory = 2;
+      float storage = 3;
+      float storageEphemeral = 4;
     }
   }
 }
@@ -711,17 +747,24 @@ message GetNodeReply {
   map <string, string> annotations = 10;
   Capacity capacity = 11;
   Allocatable allocatable = 12;
+  AllocatablePercent allocatablePercent = 13;
   message Capacity {
-    string cpu = 1;
-    string memory = 2;
-    string storage = 3;
-    string storageEphemeral = 4;
+    int64 cpu = 1;
+    int64 memory = 2;
+    int64 storage = 3;
+    int64 storageEphemeral = 4;
   }
   message Allocatable {
-    string cpu = 1;
-    string memory = 2;
-    string storage = 3;
-    string storageEphemeral = 4;
+    int64 cpu = 1;
+    int64 memory = 2;
+    int64 storage = 3;
+    int64 storageEphemeral = 4;
+  }
+  message AllocatablePercent {
+    float cpu = 1;
+    float memory = 2;
+    float storage = 3;
+    float storageEphemeral = 4;
   }
 }
 // Pod
@@ -746,14 +789,14 @@ message GetPodReply {
     string workingDir = 3;
     string command = 4;
     string securityContext = 5;
-    string requestsCpu = 6;
-    string requestsMemory = 7;
-    string requestsStorage = 8;
-    string requestsStorageEphemeral = 9;
-    string limitCpu = 10;
-    string limitMemory = 11;
-    string limitStorage = 12;
-    string limitStorageEphemeral = 13;
+    int64 requestsCpu = 6;
+    int64 requestsMemory = 7;
+    int64 requestsStorage = 8;
+    int64 requestsStorageEphemeral = 9;
+    int64 limitCpu = 10;
+    int64 limitMemory = 11;
+    int64 limitStorage = 12;
+    int64 limitStorageEphemeral = 13;
     string startupProbe = 14;
     string livenessProbe = 15;
     string readinessProbe = 16;
@@ -787,14 +830,14 @@ message ListPodReply {
       string workingDir = 3;
       string command = 4;
       string securityContext = 5;
-      string requestsCpu = 6;
-      string requestsMemory = 7;
-      string requestsStorage = 8;
-      string requestsStorageEphemeral = 9;
-      string limitCpu = 10;
-      string limitMemory = 11;
-      string limitStorage = 12;
-      string limitStorageEphemeral = 13;
+      int64 requestsCpu = 6;
+      int64 requestsMemory = 7;
+      int64 requestsStorage = 8;
+      int64 requestsStorageEphemeral = 9;
+      int64 limitCpu = 10;
+      int64 limitMemory = 11;
+      int64 limitStorage = 12;
+      int64 limitStorageEphemeral = 13;
       string startupProbe = 14;
       string livenessProbe = 15;
       string readinessProbe = 16;
@@ -826,14 +869,14 @@ message SearchPodReply {
       string workingDir = 3;
       string command = 4;
       string securityContext = 5;
-      string requestsCpu = 6;
-      string requestsMemory = 7;
-      string requestsStorage = 8;
-      string requestsStorageEphemeral = 9;
-      string limitCpu = 10;
-      string limitMemory = 11;
-      string limitStorage = 12;
-      string limitStorageEphemeral = 13;
+      int64 requestsCpu = 6;
+      int64 requestsMemory = 7;
+      int64 requestsStorage = 8;
+      int64 requestsStorageEphemeral = 9;
+      int64 limitCpu = 10;
+      int64 limitMemory = 11;
+      int64 limitStorage = 12;
+      int64 limitStorageEphemeral = 13;
       string startupProbe = 14;
       string livenessProbe = 15;
       string readinessProbe = 16;
@@ -1090,5 +1133,30 @@ message ListPersistentVolumeClaimReply {
     map <string, string> annotations = 5;
     string volumeName = 6;
     string storageClassName = 7;
+  }
+}
+
+
+message GetExpiringSoonKubernetesTlsReq {
+  string nameSpace = 1;
+}
+
+message GetExpiringSoonKubernetesTlsReply {
+  repeated ExpiringSoonKubernetesTls expiringSoonKubernetesTls = 1;
+  repeated FailedExpiringSoonKubernetesTls failedExpiringSoonKubernetesTls = 2;
+
+  message FailedExpiringSoonKubernetesTls {
+    string name = 1;
+    string nameSpace = 2;
+  }
+
+  message  ExpiringSoonKubernetesTls {
+    string name = 1;
+    string nameSpace = 2;
+    repeated string dnsNames = 3;
+    string subject = 4;
+    string serialNumber = 5;
+    int64 notAfter = 6;
+    string notAfterString = 7;
   }
 }
